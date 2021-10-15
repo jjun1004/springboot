@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+     <th:block th:fragment="setContent(content)"> 
      <head>
         <meta charset="UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -28,9 +29,9 @@
               <div class="row h-100">
                  <div class="col-md-4 p-3 bg-dark">
                     <div class="h-100 d-flex flex-column">
-                       <div th:insert="~{/common/menu}" class="flex-grow-1" style="height: 0px; overflow-y: auto; overflow-x: hidden;">
+                       <div class="flex-grow-1" style="height: 0px; overflow-y: auto; overflow-x: hidden;">
                           <!-- ############################################### -->
-                          <!-- <th:block th:replace="~{/common/menu}"></th:block> -->
+                          <th:block th:replace="~{/common/menu}"></th:block>
                           <!-- ############################################### -->
                        </div>
                     </div>
@@ -39,7 +40,9 @@
                  <div class="col-md-8 p-3">
                     <div class=" h-100 d-flex flex-column">
                        <div class="flex-grow-1 overflow-auto pr-3" style="height: 0px">
-                       
+   							<!-- ############################################### -->
+   							<th:block th:replace="${content}"></th:block>
+   							<!-- ############################################### -->
                        </div>
                     </div>
                  </div>
@@ -47,4 +50,5 @@
            </div>
         </div>
      </body>
+	</th:block>
 </html>

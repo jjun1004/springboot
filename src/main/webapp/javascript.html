@@ -1,0 +1,18 @@
+<!DOCTYPE>
+<html xmlns:th="http://www.thymeleaf.org">
+	<th:block th:replace="~{/common/layout::setContent(~{this::content})}">
+		<th:block th:fragment="content">
+			<div class="card m-2">
+				<div class="card-header">
+					JavaScript 코드 삽입
+				</div>
+				<div class="card-body">
+					<script th:inline="javascript">
+						let name = [[${name}]];
+						console.log("name: ", name);
+					</script>
+				</div>
+			</div>
+		</th:block>
+	</th:block>
+</html>
