@@ -1,6 +1,6 @@
-<!DOCTYPE>
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-	<th:block th:replace="~{/common/layout::setContent(~{this::content})}">
+	<th:block th:replace="~{common/layout::setContent(~{this::content})}">
 		<th:block th:fragment="content">
 			<div class="card m-2">
 				<div class="card-header">
@@ -9,16 +9,17 @@
 				<div class="card-body">
 					<h6 class="text-info">속성 삽입: th:text, th:utext</h6>
 					<hr/>
-					<div>bno: <span th:text="%{board.bno}"></span></div>
-					<div>btitle: <span th:text="%{board.btitle}"></span></div>
-					<div>bcontent: <span th:text="%{board.bcontent}"></span></div>
-					<div>bcontent(unescaped): <span th:utext="%{board.bcontent}"></span></div>
-					<div>mid: <span th:text="%{board.mid}"></span></div>
-					<div>bdate: <span th:text="%{#dates.format(board.bdate, 'yyyy.MM.dd')}"></span></div>
+					<div>bno: <span data-th-text="${board.bno}"></span></div>
+					<div>btitle: <span data-th-text="${board.btitle}"></span></div>
+					<div>bcontent: <span th:text="${board.bcontent}"></span></div>
+					<div>bcontent(unescaped): <span th:utext="${board.bcontent}"></span></div>
+					<div>mid: <span th:text="${board.mid}"></span></div>
+					<div>bdate: <span th:text="${#dates.format(board.bdate, 'yyyy.MM.dd')}"></span></div>
 				</div>
 				<hr/>
-				<div>
+				<div class="card-body">
 					<h6 class="text-info">인라인 삽입</h6>
+					<hr/>
 					<div>bno: [[${board.bno}]]</div>
 					<div>btitle: [[${board.btitle}]]</div>
 					<div>bcontent: [[${board.bcontent}]]</div>
