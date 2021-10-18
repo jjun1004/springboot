@@ -1,20 +1,28 @@
 package com.mycompany.webapp.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.mycompany.webapp.dto.Board;
 
 import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 
+//@Log는 자바 util에 logging을 이용
+@Slf4j 
 @Controller
-@Log
 @RequestMapping("/thymeleaf")
 public class ThymeleafController {
 	@RequestMapping("/content")
@@ -70,7 +78,7 @@ public class ThymeleafController {
 		return "thymeleaf/variableExpressions";
 	}
 	
-	@RequestMapping("selectionVariableExpressions")
+	@RequestMapping("/selectionVariableExpressions")
 	public String selectionVariableExpressions(Model model) {
 	      log.info("실행");
 	      Board board = new Board();
@@ -83,9 +91,82 @@ public class ThymeleafController {
 	      return "thymeleaf/selectionVariableExpressions";
 	}
 	
-	@RequestMapping("messageExpressions")
+	@RequestMapping("/messageExpressions")
 	public String messageExpressions() {
 		log.info("실행");
 		return "thymeleaf/messageExpressions";
 	}
+	
+	@RequestMapping({
+			"/linkUrlExpressions/{typeId}/detail",
+			"/linkUrlExpressions/{typeId}/update"
+	})
+	public String linkUrlExpressions(
+			@PathVariable String typeId,
+			@RequestParam(defaultValue="") String productId, //String productId, 이것도 가능하나 빈값이 들어올 때 null로 변환을 못함.
+			@RequestParam(defaultValue="1") int pageNo,
+			Model model) {
+		log.info("실행");
+		log.info("typeId: " + typeId);
+		log.info("productId: " + productId);
+		log.info("pageNo: " + pageNo);
+		
+		model.addAttribute("ctypeId", "t1");
+		model.addAttribute("cproductId", "p1");
+		model.addAttribute("cpageNo", "1");
+		model.addAttribute("curl1", "/thymeleaf/linkUrlExpressions/t1/detail");
+		model.addAttribute("curl2", "/t1/detail");
+	      
+		return "thymeleaf/linkUrlExpressions";
+	}
+	
+	@RequestMapping("/builtinObject")
+	public String builtinObject(HttpServletRequest request, HttpSession session, Model model) {
+		log.info("실행");
+		
+		//request 범위에 저장
+		request.setAttribute("title", "spring boot");
+		model.addAttribute("today", new Date());
+		model.addAttribute("array", new String[] {"spring", "boot", "thymeleaf"});
+		
+		//session 범위에 저장(같은 브라우저에서 공유)
+		session.setAttribute("sessionMid", "thymeleaf");
+		
+		//application 범위에 저장(모든 브라우저에서 공유)
+		ServletContext application = session.getServletContext();
+		application.setAttribute("visitorCount", 100);
+		  
+		
+		return "thymeleaf/builtinObject";
+   }
+	
+   @RequestMapping("/iteration")
+   public String getBoards(Model model) {
+      log.info("실행");
+      List<Board> list = new ArrayList<>();
+      for(int i=10; i<=15; i++) {
+         Board board = new Board();
+         board.setBno(i);
+         board.setBtitle("제목"+i);
+         board.setBcontent("내용"+i);
+         board.setMid("글쓴이"+i);
+         board.setBdate(new Date());
+         list.add(board);
+      }
+      model.addAttribute("list", list);
+      return "thymeleaf/iteration";
+   }
+   
+   @RequestMapping("/conditional")
+   public String conditional(@RequestParam(defaultValue="false") boolean option, HttpSession session, Model model) {
+      log.info("실행");
+      if(option) {
+         session.setAttribute("sessionMid", "thymeleaf");
+      } else {
+         session.removeAttribute("sessionMid");
+      }
+      
+      model.addAttribute("type", "b"); // type이라는 속성이름으로 객체 b를 저장
+      return "thymeleaf/conditional";
+   }
 }
